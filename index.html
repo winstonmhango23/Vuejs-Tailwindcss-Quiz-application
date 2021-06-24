@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Vue Tailwind Quiz</title>
+        <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+        
+        <script src="https://unpkg.com/vue@next"></script>
+    </head>
+    <body class="antialiased text-gray-700 bg-gray-100">
+        <div class="flex items-center justify-center w-full h-screen" id="app">
+            <div class="w-full max-w-xl">
+                <h1 class="text-4xl font-bold text-center text-indigo-900">
+                    Python programming Questions
+                </h1>
+                <div class="w-full p-12 mt-8 bg-white rounded-lg shadow-lg">
+                    <div v-if="index < count">
+                        <p class="text-2xl font-bold">
+                            {{ questions[index]['question'] }}
+                        </p>
+                        <label
+                            :for="key"
+                            class="block px-6 py-2 mt-4 text-lg border border-gray-300 rounded-lg"
+                            v-for="answer,key in questions[index]['answers']"
+                            :class="{'hover:bg-gray-100 cursor-pointer' : selectedAnswer == ''},
+                        {'bg-red-100 border border-20 border-red-400' : selectedAnswer == key},
+                        {'bg-green-100  border border-10 border-green-400' : key == questions[index]['correctAnswer'] && selectedAnswer != ''}"
+                        >
+                            <input
+                                type="radio"
+                                :id="key"
+                                class="hidden"
+                                :value="key"
+                                @change="answered($event)"
+                                v-model="selectedAnswer"
+                                :disabled="selectedAnswer != ''"
+                            />
+                            {{ answer }}
+                        </label>
+                        <div class="flow-root mt-6">
+                            <button
+                                class="float-right px-5 py-2 text-sm font-bold tracking-wide text-white bg-indigo-900 rounded-full"
+                                v-show="selectedAnswer != '' && index < count-1"
+                                @click="nextQuestion"
+                            >
+                                Next Question &gt;
+                            </button>
+                            <button
+                                class="float-right px-5 py-2 text-sm font-bold tracking-wide text-white bg-indigo-900 rounded-full"
+                                v-show="selectedAnswer != '' && index == count-1"
+                                @click="showResults"
+                            >
+                                View Results
+                            </button>
+                        </div>
+                    </div>
+                    <div v-else>
+                        <h2 class="text-3xl font-bold">Your Score Result</h2>
+                        <div class="flex justify-start mt-6 space-x-4">
+                            <p>
+                                Correct Answers:
+                                <span class="text-2xl font-bold text-green-700"
+                                    >{{ correctAnswer }}</span
+                                >
+                            </p>
+                            <p>
+                                Incorrect Answers:
+                                <span class="text-2xl font-bold text-red-700"
+                                    >{{ wrongAnswer }}</span
+                                >
+                            </p>
+                        </div>
+                        <div class="flow-root mt-6">
+                            <button
+                                class="float-right px-5 py-2 text-sm font-bold tracking-wide text-white bg-indigo-900 rounded-full"
+                                @click="resetQuiz"
+                            >
+                                Start Over
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="quiz.js"></script>
+    </body>
+</html>
